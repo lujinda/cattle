@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 17:08:44
+# Last modified   : 2015-02-01 17:19:47
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
@@ -153,7 +153,7 @@ class Cattle():
 
 
 class Bucket():
-    def __init__(self, scope,):
+    def __init__(self, scope, _cattle):
         self.put_file = partial(_cattle.put_file, scope)
         self.put_data = partial(_cattle.put_data, scope)
         self.rm = partial(_cattle.rm, scope)
