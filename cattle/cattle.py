@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 14:10:48
+# Last modified   : 2015-02-01 17:08:44
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
@@ -114,7 +114,7 @@ class Cattle():
         return _list
 
     def private_url(self, url, ttl=3600):
-        url += '?e=%s' % (int(time()) + ttl)
+        url += '?attname=&e=%s' % (int(time()) + ttl)
         token = self.get_download_token(url)
         return url + '&token=' +  token
 
@@ -153,14 +153,13 @@ class Cattle():
 
 
 class Bucket():
-    def __init__(self, scope,  cattle):
-        self.put_file = partial(cattle.put_file, scope)
-        self.put_data = partial(cattle.put_data, scope)
-        self.rm = partial(cattle.rm, scope)
-        self.ls = partial(cattle.ls, scope)
-        self.stat = partial(cattle.stat, scope)
-        self.ls_all = partial(cattle.ls_all, scope)
-        self.cp = partial(cattle.cp, scope)
-        self.mv = partial(cattle.mv, scope)
-        self.private_url = cattle.private_url
-
+    def __init__(self, scope,):
+        self.put_file = partial(_cattle.put_file, scope)
+        self.put_data = partial(_cattle.put_data, scope)
+        self.rm = partial(_cattle.rm, scope)
+        self.ls = partial(_cattle.ls, scope)
+        self.stat = partial(_cattle.stat, scope)
+        self.ls_all = partial(_cattle.ls_all, scope)
+        self.cp = partial(_cattle.cp, scope)
+        self.mv = partial(_cattle.mv, scope)
+        self.private_url = _cattle.private_url
