@@ -1,5 +1,5 @@
 #cattle
-![七牛logo](http://assets.qiniu.com/qiniu-204x109.png, '七牛')
+<img src="http://assets.qiniu.com/qiniu-204x109.png" />
 
 cattle是七牛的python第三方sdk，据根 [http://docs.qiniutek.com/v3/api/io/#upload](http://docs.qiniutek.com/v3/api/io/#upload) 和 [http://developer.qiniu.com/docs/v6/index.html](http://developer.qiniu.com/docs/v6/index.html) 这里面的api文档写的。比官方的用起来方便，功能也挺多的，一般的文件上传，下载，操作等都没什么问题。
 
