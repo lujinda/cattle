@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 17:19:47
+# Last modified   : 2015-02-01 19:59:33
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
@@ -60,6 +60,9 @@ class Cattle():
             return '', ret.json()
 
     def put_data(self, scope, data, key = None, mime_type = '', override = True):
+        """
+        上传二进制流
+        """
         if not key:
             key = hashlib.md5(data).hexdigest()
 
@@ -67,6 +70,7 @@ class Cattle():
 
     def put_file(self, scope, file_path, key = None, mime_type = '', override = True, md5 = False):
         """
+        直传文件
         如果不指定key，同时md5为False，则会以 file_path作为 key，如果指定了md5对内容做一个md5计算，以md5值作为key
         """
         with open(file_path, 'rb') as fd:
@@ -94,6 +98,11 @@ class Cattle():
         return self.api_call(url)
 
     def ls(self, scope, marker = '', limit = 1000, prefix=''):
+        """
+        列出文件
+        limit: 限制列出的数量
+        prefix: 限制列出文件的前缀
+        """
         url = RSF_HOST + '/list?bucket={scope}&marker={marker}&limit={limit}&prefix={prefix}'.format(
                scope = scope, marker = marker, 
                 limit = limit, prefix = prefix)
@@ -101,6 +110,10 @@ class Cattle():
         return self.api_call(url)
 
     def ls_all(self, scope, prefix = ''):
+        """
+        列出所有文件
+        prefix: 限制列出文件的前缀
+        """
         _list = []
         marker = ''
         while True:
@@ -114,6 +127,10 @@ class Cattle():
         return _list
 
     def private_url(self, url, ttl=3600):
+        """
+        url格式:http://域名/key
+        ttl: 下载链接过期时间
+        """
         url += '?attname=&e=%s' % (int(time()) + ttl)
         token = self.get_download_token(url)
         return url + '&token=' +  token
