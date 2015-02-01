@@ -2,13 +2,13 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 13:03:24
+# Last modified   : 2015-02-01 14:10:48
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
 __all__ = ['Cattle']
 
-from .token import UploadToken, AccessToken
+from .token import UploadToken, AccessToken, DownloadToken
 from os import path
 
 RS_HOST = 'http://rs.qiniu.com'
@@ -17,6 +17,7 @@ UP_HOST = 'http://upload.qiniu.com'
 from requests import post, get
 from base64 import urlsafe_b64encode
 from mimetypes import guess_type
+from time import time
 from functools import partial
 import hashlib
 
@@ -112,6 +113,11 @@ class Cattle():
 
         return _list
 
+    def private_url(self, url, ttl=3600):
+        url += '?e=%s' % (int(time()) + ttl)
+        token = self.get_download_token(url)
+        return url + '&token=' +  token
+
     def api_call(self, url):
         rs_headers = self.get_rs_headers(url)
         ret = post(url, headers = rs_headers)
@@ -127,6 +133,9 @@ class Cattle():
     def get_access_token(self, url):
         return AccessToken(self.access_key, 
                 self.secret_key, url = url).token
+
+    def get_download_token(self, url):
+        return DownloadToken(self.access_key, self.secret_key, url).token
 
     def get_rs_headers(self, url):
         token = self.get_access_token(url)
@@ -153,4 +162,5 @@ class Bucket():
         self.ls_all = partial(cattle.ls_all, scope)
         self.cp = partial(cattle.cp, scope)
         self.mv = partial(cattle.mv, scope)
+        self.private_url = cattle.private_url
 

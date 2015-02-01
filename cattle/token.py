@@ -2,8 +2,8 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-01-31 19:40:53
-# Filename        : token.py
+# Last modified   : 2015-02-01 14:03:10
+# Filename        : cattle/token.py
 # Description     : 
 
 from base64 import urlsafe_b64encode
@@ -34,8 +34,21 @@ class AccessToken():
         return ':' .join([self.access_key, 
                 hmac_sha1_encode(token, self.secret_key)])
 
+class DownloadToken():
+    def __init__(self, access_key, secret_key, url):
+        self.access_key = access_key
+        self.secret_key = secret_key
+        self.url = url
+
+    @property
+    def token(self):
+        checksum = hmac_sha1_encode(self.url, self.secret_key)
+        return ':'.join([self.access_key, checksum])
+
+
+
 class UploadToken():
-    def __init__(self, access_key, secret_key, scope='zjypan-0', ttl=3600, fsizeLimt = 0):
+    def __init__(self, access_key, secret_key, scope, ttl=3600, fsizeLimt = 0):
         assert ttl > 10
         self.access_key = access_key
         self.secret_key = secret_key
