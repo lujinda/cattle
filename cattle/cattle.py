@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 19:59:33
+# Last modified   : 2015-03-04 20:34:32
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
@@ -14,6 +14,8 @@ from os import path
 RS_HOST = 'http://rs.qiniu.com'
 RSF_HOST = 'http://rsf.qbox.me'
 UP_HOST = 'http://upload.qiniu.com'
+UC_HOST = 'http://uc.qbox.me'
+
 from requests import post, get
 from base64 import urlsafe_b64encode
 from mimetypes import guess_type
@@ -86,6 +88,8 @@ class Cattle():
                 urlsafe_b64encode('%s:%s' % (scope, key)))
         return self.api_call(url)
 
+
+
     def __rs_handler_two(self, do, scope_s, key_s, scope_d, key_d = None):
         # 如果不指定scope_d，则表示在同一个bucket中进行操作
         if not key_d:
@@ -108,6 +112,16 @@ class Cattle():
                 limit = limit, prefix = prefix)
 
         return self.api_call(url)
+
+    def drop(self, scope):
+        url = RS_HOST + '/drop/{scope}'.format(scope = scope)
+
+        return self.api_call(url)
+
+    def empty(self, scope):
+        for obj in self.ls_all(scope):
+            key = obj['key']
+            self.rm(scope, key)
 
     def ls_all(self, scope, prefix = ''):
         """
@@ -135,9 +149,9 @@ class Cattle():
         token = self.get_download_token(url)
         return url + '&token=' +  token
 
-    def api_call(self, url):
+    def api_call(self, url, data = {}):
         rs_headers = self.get_rs_headers(url)
-        ret = post(url, headers = rs_headers)
+        ret = post(url, headers = rs_headers, data = data)
         if ret.status_code == 200:
             return ret.text.strip() and ret.json(), ''
         else:
@@ -164,6 +178,7 @@ class Cattle():
     def get_bucket(self, scope):
         return Bucket(scope, self)
 
+
     def list_bucket(self):
         url = '%s/buckets' % (RS_HOST)
         return self.api_call(url)
@@ -180,3 +195,6 @@ class Bucket():
         self.cp = partial(_cattle.cp, scope)
         self.mv = partial(_cattle.mv, scope)
         self.private_url = _cattle.private_url
+        self.drop = partial(_cattle.drop, scope)
+        self.empty = partial(_cattle.empty, scope)
+

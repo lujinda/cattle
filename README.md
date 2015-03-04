@@ -36,6 +36,12 @@ help(cattle.put_file):
 put_file(self, scope, file_path, key=None, mime_type='', override=True, md5=False) method of cattle.cattle.Cattle instance
     直传文件
     如果不指定key，同时md5为False，则会以 file_path作为 key，如果指定了md5对内容做一个md5计算，以md5值作为key
+
+删除bucket:
+cattle.drop(bucket_name)
+
+清空bucket内的所有文件:
+cattle.empty(bucket_name)
     
 </pre>
 
