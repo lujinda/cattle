@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-03-04 20:34:32
+# Last modified   : 2015-03-04 21:30:09
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
@@ -120,7 +120,7 @@ class Cattle():
 
     def empty(self, scope):
         for obj in self.ls_all(scope):
-            key = obj['key']
+            key = obj['key'].encode('utf-8')
             self.rm(scope, key)
 
     def ls_all(self, scope, prefix = ''):
