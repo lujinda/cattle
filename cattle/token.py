@@ -2,21 +2,24 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 14:03:10
+# Last modified   : 2015-03-19 16:29:57
 # Filename        : cattle/token.py
 # Description     : 
 
-from base64 import urlsafe_b64encode
+from __future__ import unicode_literals
 import time
 import json
 from hashlib import sha1
-from base64 import urlsafe_b64encode
 import hmac
-from urlparse import urlparse
+from .utils import urlsafe_b64encode
+try:
+    from urlparse import urlparse
+except ImportError:  # py3
+    from urllib.parse import urlparse
 
 def hmac_sha1_encode(data, secret_key):
-    return urlsafe_b64encode(hmac.new(secret_key,
-        data, sha1).digest())
+    return urlsafe_b64encode(hmac.new(secret_key.encode(),
+        data.encode(), sha1).digest())
 
 class AccessToken():
     def __init__(self, access_key, secret_key, url):

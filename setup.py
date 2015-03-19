@@ -2,7 +2,7 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-02-01 13:11:51
+# Last modified   : 2015-03-19 18:02:41
 # Filename        : setup.py
 # Description     : 
 
@@ -11,7 +11,7 @@ import os
 
 setup(
         name = 'cattle',
-        version = '0.0.1',
+        version = '0.0.2',
         author = 'tuxpy',
         author_email = 'q8886888@qq.com',
         license = 'GPL3',

@@ -2,10 +2,11 @@
 #coding:utf8
 # Author          : tuxpy
 # Email           : q8886888@qq.com
-# Last modified   : 2015-03-04 21:30:09
+# Last modified   : 2015-03-19 16:35:52
 # Filename        : cattle/cattle.py
 # Description     : API地址：http://docs.qiniutek.com/v3/api/io/#upload
 
+from __future__ import unicode_literals
 __all__ = ['Cattle']
 
 from .token import UploadToken, AccessToken, DownloadToken
@@ -17,7 +18,7 @@ UP_HOST = 'http://upload.qiniu.com'
 UC_HOST = 'http://uc.qbox.me'
 
 from requests import post, get
-from base64 import urlsafe_b64encode
+from .utils import urlsafe_b64encode, native_str
 from mimetypes import guess_type
 from time import time
 from functools import partial
@@ -37,6 +38,7 @@ class Cattle():
         self.mv = partial(self.__rs_handler_two, 'move')
     
     def __put(self, scope, key, content, mime_type='', override=True):
+        scope, key = native_str(scope, key)
         if override:
             token = self.get_upload_token('%s:%s' %(scope, key))
         else:
@@ -48,7 +50,6 @@ class Cattle():
                 (urlsafe_b64encode('%s:%s' % (scope, key)),
                     urlsafe_b64encode(mime_type))
                 }
-
         files = {'file': content}
 
         url = UP_HOST + '/upload'
@@ -84,13 +85,14 @@ class Cattle():
                 mime_type or get_file_mime_type(file_path),  override)
 
     def __rs_handler(self, do, scope, key):
+        scope, key = native_str(scope, key)
         url = '%s/%s/%s' % (RS_HOST, do,
                 urlsafe_b64encode('%s:%s' % (scope, key)))
         return self.api_call(url)
 
 
-
     def __rs_handler_two(self, do, scope_s, key_s, scope_d, key_d = None):
+        scope_s, key_s, scope_d, keys_d = native_str(scope_s, key_s, scope_d, key_d)
         # 如果不指定scope_d，则表示在同一个bucket中进行操作
         if not key_d:
             scope_d, key_d  = scope_s, scope_d
@@ -120,7 +122,7 @@ class Cattle():
 
     def empty(self, scope):
         for obj in self.ls_all(scope):
-            key = obj['key'].encode('utf-8')
+            key = obj['key']
             self.rm(scope, key)
 
     def ls_all(self, scope, prefix = ''):
@@ -172,7 +174,7 @@ class Cattle():
         token = self.get_access_token(url)
         return {
                 'Content-Type': ' application/x-www-form-urlencoded',
-                'Authorization': 'QBox %s' % token
+                'Authorization': 'QBox %s' % token,
                 }
 
     def get_bucket(self, scope):
