@@ -6,6 +6,6 @@
 # Filename        : cattle/__init__.py
 # Description     : 
 
-version = '0.0.2'
+version = '0.0.3'
 from .cattle import Cattle
 
