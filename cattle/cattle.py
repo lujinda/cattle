@@ -17,7 +17,7 @@ RSF_HOST = 'http://rsf.qbox.me'
 UP_HOST = 'http://upload.qiniu.com'
 UC_HOST = 'http://uc.qbox.me'
 
-from requests import post, get
+from .request import post, get
 from .utils import urlsafe_b64encode, native_str
 from mimetypes import guess_type
 from time import time
