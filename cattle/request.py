@@ -1,4 +1,4 @@
-#/usr/bin/env python
+#!/usr/bin/env python
 #coding:utf-8
 # Author        : tuxpy
 # Email         : q8886888@qq.com.com
@@ -128,6 +128,9 @@ class Request(object):
         self.body = self.__made_multipart_data(boundary)
         return self.__request()
 
+    def put(self):
+        self.post()
+
     def __made_multipart_data(self, boundary):
         body = ''
         CRLF = '\r\n'
@@ -173,4 +176,9 @@ def get(url, *args, **kwargs):
 def post(url, *args, **kwargs):
     request = Request('POST', url, *args, **kwargs)
     return request.post()
+
+def put(url, *args, **kwargs):
+    request = Request('POST', url, *args, **kwargs)
+    return request.put()
+
 
