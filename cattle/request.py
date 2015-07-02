@@ -164,7 +164,7 @@ class Request(object):
             _split_char = '?'
 
         if self.data:
-            self.uri += _split_char + urllib.urlencode(self.data)
+            self.uri += _split_char + urlencode(self.data)
 
         return self.__request()
 
