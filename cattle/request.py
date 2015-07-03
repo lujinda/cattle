@@ -144,7 +144,7 @@ class Request(object):
                 file_content = _file
                 mime_type = get_mime(file_name)
             
-            _body_string = '--{boundary}{CRLF}Content-Disposition: form-data; name="{name}"; filename="{filename}"{CRLF}Content_Length: {mimetype}{CRLF2}{content}{CRLF}'.format(boundary = boundary, name = _name, filename = file_name, CRLF = CRLF, mimetype = mime_type, CRLF2 = CRLF * 2, content = file_content)
+            _body_string = '--{boundary}{CRLF}Content-Disposition: form-data; name="{name}"; filename="{filename}"{CRLF}Content-Type: {mimetype}{CRLF2}{content}{CRLF}'.format(boundary = boundary, name = _name, filename = file_name, CRLF = CRLF, mimetype = mime_type, CRLF2 = CRLF * 2, content = file_content)
             body += _body_string
 
         for _key, _value in self.data.items():
