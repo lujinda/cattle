@@ -26,6 +26,7 @@ import logging
 import json
 import gzip
 import mimetypes
+import utils
 
 def get_mime(file_name):
     return mimetypes.guess_type(file_name)[0] or 'application/octet-stream'
@@ -102,17 +103,22 @@ class Request(object):
         self.__conn = Connection(host = self.host)
         self.__conn.set_debuglevel(debug and logging.DEBUG or 0)
 
-        self.headers = self.generate_header(headers or {})
+        self.headers = {}
+        self.generate_header(headers)
 
-    def generate_header(self, headers):
-        headers.setdefault('User-Agent', 'qiniu/cattle python sdk')
-        headers.setdefault('Host', self.host)
+    def set_header(self, key, value):
+        self.headers[utils.utf8(key)] = utils.utf8(value)
 
-        return headers
+    def generate_header(self, headers = None):
+        headers = headers or {}
+        self.set_header('User-Agent', 'qiniu/cattle python sdk')
+        self.set_header('Host', self.host)
+        for key, value in headers.items():
+            self.set_header(key, value)
 
     def __request(self):
         conn = self.__conn
-        conn.request(self.method, self.uri, body = self.body,
+        conn.request(utils.utf8(self.method), utils.utf8(self.uri), body = self.body,
             headers = self.headers)
 
         response = conn.getresponse()
@@ -124,7 +130,7 @@ class Request(object):
             self.body = urlencode(self.data)
             return self.__request()
         boundary = '---------------------------14484134827975982172037180455'
-        self.headers['Content-Type'] = 'multipart/form-data; boundary=' + boundary
+        self.set_header('Content-Type', 'multipart/form-data; boundary=' + boundary)
         self.body = self.__made_multipart_data(boundary)
         return self.__request()
 

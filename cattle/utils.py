@@ -27,7 +27,15 @@ def native_str(*args):
     把py2 的参数中str转成unicode
     """
     if is_py3:
-        return args
+        result = args
     else:
-        return map(lambda s: isinstance(s, str) and  s.decode('utf-8') or s, args)
+        result = map(lambda s: isinstance(s, str) and  s.decode('utf-8') or s, args)
+    
+    return result if len(args) != 1 else result[0]
+
+def utf8(s):
+    if is_py3:
+        return isinstance(s, str) and s.encode('utf-8') or s
+    else:
+        return isinstance(s, unicode) and s.encode('utf-8') or s
 
